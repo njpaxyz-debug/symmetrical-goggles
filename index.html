@@ -6,576 +6,72 @@
   <title>Resonance Codex Companion</title>
   <meta name="theme-color" content="#07070f" />
   <style>
-    :root {
-      --bg: #07070f;
-      --panel: rgba(196, 163, 90, 0.055);
-      --panel-strong: rgba(196, 163, 90, 0.105);
-      --line: rgba(196, 163, 90, 0.2);
-      --line-strong: rgba(196, 163, 90, 0.45);
-      --text: #dec98e;
-      --muted: rgba(222, 201, 142, 0.62);
-      --dim: rgba(222, 201, 142, 0.38);
-      --gold: #c4a35a;
-      --blue: #3a5a8b;
-      --green: #5ab049;
-      --red: #9a4d42;
-      --shadow: rgba(0,0,0,.45);
-      --radius: 18px;
-      color-scheme: dark;
-    }
-
-    * { box-sizing: border-box; }
-    html, body { min-height: 100%; }
-    body {
-      margin: 0;
-      font-family: Georgia, "Times New Roman", serif;
-      background:
-        radial-gradient(circle at 30% 5%, rgba(196,163,90,.13), transparent 26rem),
-        radial-gradient(circle at 100% 25%, rgba(58,90,139,.18), transparent 22rem),
-        linear-gradient(180deg, #07070f 0%, #0b0b15 60%, #050508 100%);
-      color: var(--text);
-      padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
-    }
-
-    button, input, select, textarea { font: inherit; color: var(--text); }
-
-    button {
-      border: 1px solid var(--line);
-      background: rgba(196, 163, 90, .08);
-      border-radius: 14px;
-      min-height: 44px;
-      padding: .7rem .85rem;
-      cursor: pointer;
-      box-shadow: 0 10px 30px var(--shadow);
-      transition: transform .12s ease, background .12s ease, border-color .12s ease;
-    }
-    button:hover, button:focus-visible { background: rgba(196, 163, 90, .14); border-color: var(--line-strong); outline: none; }
-    button:active { transform: translateY(1px); }
-    button.primary { background: rgba(196, 163, 90, .2); border-color: rgba(196, 163, 90, .55); }
-    button.danger { border-color: rgba(154,77,66,.65); background: rgba(154,77,66,.14); }
-
-    input, select, textarea {
-      width: 100%;
-      border: 1px solid var(--line);
-      background: rgba(0,0,0,.22);
-      border-radius: 12px;
-      padding: .75rem;
-      min-height: 44px;
-    }
-    textarea { min-height: 96px; resize: vertical; }
-
-    .app { width: min(100%, 520px); margin: 0 auto; padding: .75rem .75rem 6.5rem; }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      margin: -.75rem -.75rem .75rem;
-      padding: calc(.75rem + env(safe-area-inset-top)) .75rem .75rem;
-      backdrop-filter: blur(16px);
-      background: linear-gradient(180deg, rgba(7,7,15,.95), rgba(7,7,15,.78));
-      border-bottom: 1px solid var(--line);
-    }
-
-    .brand { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; }
-
-    h1 { font-size: 1.05rem; font-weight: 400; letter-spacing: .08em; margin: 0; text-transform: uppercase; }
-
-    .subtitle { margin: .35rem 0 0; color: var(--muted); font-size: .78rem; line-height: 1.35; }
-
-    .timegrid { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; margin-top: .75rem; }
-
-    .mini { border: 1px solid var(--line); border-radius: 14px; padding: .55rem .65rem; background: rgba(196, 163, 90, .045); min-height: 58px; }
-
-    .label { display: block; color: var(--dim); font-size: .62rem; text-transform: uppercase; letter-spacing: .14em; margin-bottom: .2rem; }
-
-    .value { font-size: .95rem; line-height: 1.2; }
-
-    .card { border: 1px solid var(--line); background: var(--panel); border-radius: var(--radius); padding: 1rem; box-shadow: 0 18px 50px var(--shadow); margin: .75rem 0; }
-
-    .card.strong { background: var(--panel-strong); }
-
-    h2 { font-size: .82rem; font-weight: 400; letter-spacing: .18em; text-transform: uppercase; margin: 0 0 .75rem; color: var(--gold); }
-
-    h3 { font-size: 1rem; margin: .2rem 0 .4rem; font-weight: 400; }
-
-    p { line-height: 1.48; margin: .55rem 0; color: var(--muted); }
-    small { color: var(--dim); }
-
-    .row { display: flex; gap: .55rem; align-items: center; flex-wrap: wrap; }
-    .row > * { flex: 1 1 auto; }
-    .tight { gap: .35rem; }
-    .stack { display: grid; gap: .65rem; }
-    .two { display: grid; grid-template-columns: 1fr 1fr; gap: .55rem; }
-    .three { display: grid; grid-template-columns: repeat(3,1fr); gap: .45rem; }
-
-    .badge { display: inline-flex; align-items: center; gap: .25rem; border: 1px solid var(--line); border-radius: 999px; padding: .28rem .48rem; font-size: .64rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); background: rgba(0,0,0,.16); white-space: nowrap; }
-    .badge.bio { border-color: rgba(90,176,73,.45); color: #a9d39f; }
-    .badge.practice { border-color: rgba(196,163,90,.45); color: var(--text); }
-    .badge.experimental { border-color: rgba(58,90,139,.65); color: #a9c1e6; }
-    .badge.speculative { border-color: rgba(154,77,66,.7); color: #dfaaa2; }
-
-    .nav { position: fixed; left: 50%; bottom: .65rem; transform: translateX(-50%); z-index: 20; width: min(calc(100% - 1rem), 520px); display: grid; grid-template-columns: repeat(5, 1fr); gap: .3rem; padding: .35rem; border: 1px solid var(--line); border-radius: 22px; background: rgba(7,7,15,.9); backdrop-filter: blur(16px); box-shadow: 0 18px 50px var(--shadow); }
-    .nav button { min-height: 48px; padding: .35rem .2rem; font-size: .68rem; border-radius: 16px; box-shadow: none; background: transparent; }
-    .nav button.active { background: rgba(196, 163, 90, .18); border-color: var(--line-strong); }
-
-    .screen { display: none; }
-    .screen.active { display: block; animation: fade .18s ease-out; }
-    @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-
-    .frequency { display: flex; align-items: end; justify-content: space-between; gap: 1rem; }
-    .hz { font-size: 2.35rem; letter-spacing: -.04em; color: #f0d99c; line-height: .95; }
-
-    .wave { position: relative; height: 38px; overflow: hidden; border: 1px solid var(--line); border-radius: 999px; background: rgba(0,0,0,.18); }
-    .wave::before { content: "∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿"; position: absolute; left: -20%; top: 5px; width: 160%; color: rgba(222,201,142,.65); font-size: 1.2rem; letter-spacing: .12em; animation: drift 5s linear infinite; }
-    .wave.paused::before { animation-play-state: paused; opacity: .35; }
-    @keyframes drift { to { transform: translateX(-25%); } }
-
-    .bodymap { display: grid; grid-template-columns: 140px 1fr; gap: .85rem; align-items: center; }
-    .figure { width: 140px; height: 240px; border: 1px solid var(--line); border-radius: 18px; background: rgba(0,0,0,.18); }
-    .region { cursor: pointer; }
-    .region.active { fill: rgba(196,163,90,.35); stroke: rgba(196,163,90,.95); }
-    .region:not(.active) { fill: rgba(196,163,90,.045); stroke: rgba(196,163,90,.32); }
-    .region:hover { fill: rgba(196,163,90,.24); }
-
-    .timer { text-align: center; border-radius: 20px; padding: 1rem; border: 1px solid var(--line); background: rgba(0,0,0,.2); }
-    .timer-face { width: 168px; height: 168px; margin: .8rem auto; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; background: conic-gradient(var(--gold) var(--progress,0%), rgba(196,163,90,.08) 0), radial-gradient(circle, #080812 61%, transparent 62%); }
-    .timer-number { font-size: 2.1rem; color: #f0d99c; }
-
-    .list { display: grid; gap: .6rem; }
-    .item { border: 1px solid var(--line); border-radius: 16px; padding: .75rem; background: rgba(0,0,0,.16); }
-    .item button { box-shadow: none; }
-
-    details { border: 1px solid var(--line); border-radius: 16px; padding: .75rem; background: rgba(0,0,0,.14); }
-    summary { cursor: pointer; color: #efd89d; }
-
-    .notice { border-left: 3px solid var(--gold); padding: .65rem .75rem; background: rgba(196,163,90,.075); color: var(--muted); border-radius: 0 12px 12px 0; font-size: .86rem; line-height: 1.45; }
-    .danger-note { border-left-color: var(--red); background: rgba(154,77,66,.12); }
-
-    .toast { position: fixed; left: 50%; bottom: 5.8rem; transform: translateX(-50%) translateY(20px); opacity: 0; pointer-events: none; z-index: 40; width: min(calc(100% - 2rem), 420px); background: rgba(7,7,15,.96); border: 1px solid var(--line-strong); padding: .8rem 1rem; border-radius: 16px; transition: .18s ease; box-shadow: 0 18px 50px var(--shadow); }
-    .toast.show { opacity: 1; transform: translateX(-50%); }
-
-    @media (max-width: 420px) {
-      .bodymap { grid-template-columns: 1fr; }
-      .figure { margin: 0 auto; }
-      .hz { font-size: 2rem; }
-    }
-    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+    :root{--bg:#07070f;--panel:rgba(196,163,90,.06);--panel2:rgba(196,163,90,.11);--line:rgba(196,163,90,.22);--line2:rgba(196,163,90,.48);--text:#dec98e;--muted:rgba(222,201,142,.66);--dim:rgba(222,201,142,.42);--gold:#c4a35a;--blue:#3a5a8b;--green:#5ab049;--red:#9a4d42;--shadow:rgba(0,0,0,.46);--radius:18px;color-scheme:dark}
+    *{box-sizing:border-box} html,body{min-height:100%} body{margin:0;font-family:Georgia,"Times New Roman",serif;background:radial-gradient(circle at 30% 4%,rgba(196,163,90,.14),transparent 25rem),radial-gradient(circle at 100% 24%,rgba(58,90,139,.18),transparent 22rem),linear-gradient(180deg,#07070f,#0b0b15 62%,#050508);color:var(--text);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+    button,input,select,textarea{font:inherit;color:var(--text)} button{border:1px solid var(--line);background:rgba(196,163,90,.08);border-radius:14px;min-height:44px;padding:.7rem .85rem;cursor:pointer;box-shadow:0 10px 30px var(--shadow)}button:hover,button:focus-visible{background:rgba(196,163,90,.14);border-color:var(--line2);outline:none}button.primary{background:rgba(196,163,90,.2);border-color:rgba(196,163,90,.55)}button.danger{border-color:rgba(154,77,66,.7);background:rgba(154,77,66,.14)}input,select,textarea{width:100%;border:1px solid var(--line);background:rgba(0,0,0,.22);border-radius:12px;padding:.75rem;min-height:44px}textarea{min-height:96px;resize:vertical}
+    .app{width:min(100%,540px);margin:0 auto;padding:.75rem .75rem 6.7rem}.topbar{position:sticky;top:0;z-index:10;margin:-.75rem -.75rem .75rem;padding:calc(.75rem + env(safe-area-inset-top)) .75rem .75rem;backdrop-filter:blur(16px);background:linear-gradient(180deg,rgba(7,7,15,.96),rgba(7,7,15,.78));border-bottom:1px solid var(--line)}.brand{display:flex;align-items:baseline;justify-content:space-between;gap:.75rem}h1{font-size:1.05rem;font-weight:400;letter-spacing:.08em;margin:0;text-transform:uppercase}.subtitle{margin:.35rem 0 0;color:var(--muted);font-size:.78rem;line-height:1.35}.timegrid{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin-top:.75rem}.mini{border:1px solid var(--line);border-radius:14px;padding:.55rem .65rem;background:rgba(196,163,90,.045);min-height:58px}.label{display:block;color:var(--dim);font-size:.62rem;text-transform:uppercase;letter-spacing:.14em;margin-bottom:.2rem}.value{font-size:.95rem;line-height:1.2}.card{border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);padding:1rem;box-shadow:0 18px 50px var(--shadow);margin:.75rem 0}.card.strong{background:var(--panel2)}h2{font-size:.82rem;font-weight:400;letter-spacing:.18em;text-transform:uppercase;margin:0 0 .75rem;color:var(--gold)}h3{font-size:1rem;margin:.2rem 0 .4rem;font-weight:400}p{line-height:1.48;margin:.55rem 0;color:var(--muted)}small{color:var(--dim)}.row{display:flex;gap:.55rem;align-items:center;flex-wrap:wrap}.row>*{flex:1 1 auto}.tight{gap:.35rem}.stack{display:grid;gap:.65rem}.two{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:.45rem}.badge{display:inline-flex;align-items:center;gap:.25rem;border:1px solid var(--line);border-radius:999px;padding:.28rem .48rem;font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:rgba(0,0,0,.16);white-space:nowrap}.badge.bio{border-color:rgba(90,176,73,.45);color:#a9d39f}.badge.practice{border-color:rgba(196,163,90,.45);color:var(--text)}.badge.experimental{border-color:rgba(58,90,139,.65);color:#a9c1e6}.badge.speculative{border-color:rgba(154,77,66,.7);color:#dfaaa2}.nav{position:fixed;left:50%;bottom:.65rem;transform:translateX(-50%);z-index:20;width:min(calc(100% - 1rem),540px);display:grid;grid-template-columns:repeat(6,1fr);gap:.25rem;padding:.32rem;border:1px solid var(--line);border-radius:22px;background:rgba(7,7,15,.92);backdrop-filter:blur(16px);box-shadow:0 18px 50px var(--shadow)}.nav button{min-height:48px;padding:.35rem .15rem;font-size:.62rem;border-radius:16px;box-shadow:none;background:transparent}.nav button.active{background:rgba(196,163,90,.18);border-color:var(--line2)}.screen{display:none}.screen.active{display:block;animation:fade .18s ease-out}@keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}.frequency{display:flex;align-items:end;justify-content:space-between;gap:1rem}.hz{font-size:2.35rem;letter-spacing:-.04em;color:#f0d99c;line-height:.95}.wave{position:relative;height:38px;overflow:hidden;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.18);margin-top:.7rem}.wave:before{content:"∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿∿";position:absolute;left:-20%;top:5px;width:160%;color:rgba(222,201,142,.65);font-size:1.2rem;letter-spacing:.12em;animation:drift 5s linear infinite}.wave.paused:before{animation-play-state:paused;opacity:.35}@keyframes drift{to{transform:translateX(-25%)}}.bodymap{display:grid;grid-template-columns:140px 1fr;gap:.85rem;align-items:center}.figure{width:140px;height:240px;border:1px solid var(--line);border-radius:18px;background:rgba(0,0,0,.18)}.region{cursor:pointer}.region.active{fill:rgba(196,163,90,.35);stroke:rgba(196,163,90,.95)}.region:not(.active){fill:rgba(196,163,90,.045);stroke:rgba(196,163,90,.32)}.region:hover{fill:rgba(196,163,90,.24)}.timer{text-align:center;border-radius:20px;padding:1rem;border:1px solid var(--line);background:rgba(0,0,0,.2)}.timer-face{width:168px;height:168px;margin:.8rem auto;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;background:conic-gradient(var(--gold) var(--progress,0%),rgba(196,163,90,.08) 0),radial-gradient(circle,#080812 61%,transparent 62%)}.timer-number{font-size:2.1rem;color:#f0d99c}.list{display:grid;gap:.6rem}.item{border:1px solid var(--line);border-radius:16px;padding:.75rem;background:rgba(0,0,0,.16)}.item button{box-shadow:none}details{border:1px solid var(--line);border-radius:16px;padding:.75rem;background:rgba(0,0,0,.14)}summary{cursor:pointer;color:#efd89d}.notice{border-left:3px solid var(--gold);padding:.65rem .75rem;background:rgba(196,163,90,.075);color:var(--muted);border-radius:0 12px 12px 0;font-size:.86rem;line-height:1.45}.danger-note{border-left-color:var(--red);background:rgba(154,77,66,.12)}.toast{position:fixed;left:50%;bottom:5.8rem;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;z-index:40;width:min(calc(100% - 2rem),420px);background:rgba(7,7,15,.96);border:1px solid var(--line2);padding:.8rem 1rem;border-radius:16px;transition:.18s ease;box-shadow:0 18px 50px var(--shadow)}.toast.show{opacity:1;transform:translateX(-50%)}.planner-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.55rem}.planner-row{border:1px solid var(--line);background:rgba(0,0,0,.16);border-radius:16px;padding:.75rem;text-align:left;box-shadow:none}.planner-row.active{background:rgba(196,163,90,.16);border-color:var(--line2)}.audit-box{border:1px dashed rgba(196,163,90,.45);border-radius:16px;padding:.75rem;background:rgba(0,0,0,.14)}@media(max-width:420px){.bodymap,.planner-grid{grid-template-columns:1fr}.figure{margin:0 auto}.hz{font-size:2rem}.nav button{font-size:.58rem}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
   </style>
 </head>
 <body>
-  <main class="app">
-    <header class="topbar">
-      <div class="brand">
-        <h1>Resonance Codex</h1>
-        <span class="badge practice">MVP 1</span>
-      </div>
-      <p class="subtitle">TechnoBioFascia companion: orient, attune, locate, practice, reflect. Evidence-labeled; no medical claims.</p>
-      <section class="timegrid" aria-label="current context">
-        <div class="mini"><span class="label">Time</span><span class="value" id="clock">—</span></div>
-        <div class="mini"><span class="label">Solar Phase</span><span class="value" id="solarPhase">—</span></div>
-        <div class="mini"><span class="label">Sun / Moon</span><span class="value" id="sunMoon">—</span></div>
-        <div class="mini"><span class="label">Planetary Hour</span><span class="value" id="planetHour">—</span></div>
-      </section>
-    </header>
-
-    <section id="screen-today" class="screen active">
-      <article class="card strong">
-        <h2>Today’s Prescription</h2>
-        <div class="frequency">
-          <div>
-            <div class="hz"><span id="todayHz">—</span> Hz</div>
-            <h3 id="todayName">—</h3>
-            <p id="todayUse">—</p>
-          </div>
-          <button class="primary" id="todayPlay">▶ Tone</button>
-        </div>
-        <div class="wave paused" id="todayWave" aria-hidden="true"></div>
-        <div class="row tight" id="todayBadges"></div>
-      </article>
-
-      <article class="card">
-        <h2>Body Focus Map</h2>
-        <div class="bodymap">
-          <svg class="figure" viewBox="0 0 140 240" role="img" aria-label="tappable body focus map">
-            <circle cx="70" cy="28" r="18" class="region" data-region="head"></circle>
-            <rect x="48" y="50" width="44" height="28" rx="13" class="region" data-region="throat"></rect>
-            <rect x="34" y="78" width="72" height="42" rx="18" class="region" data-region="heart"></rect>
-            <rect x="38" y="120" width="64" height="44" rx="16" class="region" data-region="core"></rect>
-            <rect x="44" y="164" width="52" height="28" rx="14" class="region" data-region="pelvis"></rect>
-            <path d="M54 192 L42 228 M86 192 L98 228" class="region" data-region="legs" stroke-width="12" stroke-linecap="round" fill="none"></path>
-            <path d="M34 88 L12 136 M106 88 L128 136" class="region" data-region="arms" stroke-width="10" stroke-linecap="round" fill="none"></path>
-            <line x1="70" y1="48" x2="70" y2="194" stroke="rgba(222,201,142,.5)" stroke-width="1.5" stroke-dasharray="4 4"></line>
-          </svg>
-          <div>
-            <h3 id="bodyTitle">—</h3>
-            <p id="bodyDetail">—</p>
-            <p><span class="label">Practice Gate</span><span id="practiceGate">—</span></p>
-            <button id="codexJump">Open linked Codex entry</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="card">
-        <h2>Session Builder</h2>
-        <div class="timer" id="timerPanel">
-          <span class="badge practice" id="phaseBadge">◇ Calibrate</span>
-          <div class="timer-face" id="timerFace">
-            <div>
-              <div class="timer-number" id="timerNumber">25:00</div>
-              <small id="timerPhaseNote">Breath and orientation</small>
-            </div>
-          </div>
-          <div class="three">
-            <button data-duration="10">10 min</button>
-            <button data-duration="15">15 min</button>
-            <button data-duration="25" class="primary">25 min</button>
-          </div>
-          <div class="two" style="margin-top:.55rem">
-            <button class="primary" id="startSession">Begin</button>
-            <button id="nextPhase">Next Phase</button>
-          </div>
-          <div class="two" style="margin-top:.55rem">
-            <button id="pauseSession">Pause</button>
-            <button id="finishSession">Finish + Log</button>
-          </div>
-        </div>
-      </article>
-
-      <article class="card">
-        <h2>Evidence Boundary</h2>
-        <p class="notice">This companion separates anatomy, practice design, traditional correspondences, and ARBP-style experiments. It is a reflection/practice/research notebook, not a diagnostic, medical, purification, or treatment device.</p>
-      </article>
-    </section>
-
-    <section id="screen-codex" class="screen">
-      <article class="card">
-        <h2>Living Codex</h2>
-        <input id="codexSearch" placeholder="Search fascia, tensegrity, 40 Hz, meridian..." />
-        <div class="list" id="codexList" style="margin-top:.75rem"></div>
-      </article>
-    </section>
-
-    <section id="screen-sound" class="screen">
-      <article class="card">
-        <h2>Sound Lab</h2>
-        <p class="notice">Use tones softly. Stop if uncomfortable. Claims are labeled by evidence class.</p>
-        <div class="two">
-          <input id="customHz" type="number" min="0.1" step="0.01" value="136.10" aria-label="custom frequency in hertz" />
-          <button class="primary" id="customPlay">▶ Custom Tone</button>
-        </div>
-        <div class="wave paused" id="soundWave" aria-hidden="true"></div>
-      </article>
-      <article class="card">
-        <h2>Frequency Library</h2>
-        <div class="list" id="freqList"></div>
-      </article>
-    </section>
-
-    <section id="screen-aqua" class="screen">
-      <article class="card">
-        <h2>Aqua Lab / ARBP Notebook</h2>
-        <p class="notice danger-note">Exploratory protocol logging only. Do not use ARBP logs to determine medical, safety, water-purification, or treatment decisions. Causality is not assumed.</p>
-        <div class="stack">
-          <input id="expName" placeholder="Experiment name" />
-          <textarea id="expHypothesis" placeholder="Hypothesis / intention statement"></textarea>
-          <div class="two">
-            <input id="waterVolume" type="number" min="1" value="250" aria-label="water volume in milliliters" />
-            <input id="waterTemp" type="number" step="0.1" placeholder="Temp °C" />
-          </div>
-          <div class="two">
-            <select id="containerType">
-              <option>Glass</option><option>Ceramic</option><option>Metal</option><option>Plastic</option><option>Other</option>
-            </select>
-            <select id="controlMode">
-              <option>Control + Treated sample</option><option>Treated sample only</option><option>Observation log only</option>
-            </select>
-          </div>
-          <div class="two">
-            <input id="expHz" type="number" step="0.01" value="136.10" aria-label="experiment frequency hertz" />
-            <input id="expDuration" type="number" value="10" min="1" aria-label="duration minutes" />
-          </div>
-          <input id="vocalInput" placeholder="Vocal input / phrase / phoneme" />
-          <textarea id="measurements" placeholder="Before/after measurements: pH, temperature, smell, taste, plant response, photo IDs..."></textarea>
-          <button class="primary" id="saveExperiment">Save Experiment Log</button>
-        </div>
-      </article>
-      <article class="card">
-        <h2>Experiment History</h2>
-        <div class="two">
-          <button id="exportExperiments">Export JSON</button>
-          <button class="danger" id="clearExperiments">Clear</button>
-        </div>
-        <div class="list" id="experimentList" style="margin-top:.75rem"></div>
-      </article>
-    </section>
-
-    <section id="screen-journal" class="screen">
-      <article class="card">
-        <h2>Journal + Streaks</h2>
-        <div class="two">
-          <div class="mini"><span class="label">Current Streak</span><span class="value" id="streakValue">0 days</span></div>
-          <div class="mini"><span class="label">Sessions</span><span class="value" id="sessionCount">0</span></div>
-        </div>
-        <textarea id="journalNote" placeholder="Optional session note before finishing or after review..."></textarea>
-        <div class="two">
-          <button id="exportSessions">Export JSON</button>
-          <button class="danger" id="clearSessions">Clear</button>
-        </div>
-      </article>
-      <article class="card">
-        <h2>Session History</h2>
-        <div class="list" id="sessionList"></div>
-      </article>
-    </section>
-  </main>
-
-  <nav class="nav" aria-label="main navigation">
-    <button data-screen="today" class="active">Today</button>
-    <button data-screen="codex">Codex</button>
-    <button data-screen="sound">Sound</button>
-    <button data-screen="aqua">Aqua</button>
-    <button data-screen="journal">Journal</button>
-  </nav>
-
-  <div class="toast" id="toast"></div>
-
-  <script>
-    const STORE = { sessions: "resonance_codex_sessions_v1", experiments: "resonance_codex_experiments_v1", settings: "resonance_codex_settings_v1" };
-
-    const phaseRows = [
-      { range: [4, 6], name: "Brahma Muhurta", hz: 172.06, freqName: "Platonic Year", chakra: "Crown", practice: "silent meditation / digital drone", instrument: "None or quiet drone", body: "head", tags: ["PRACTICE", "TRADITIONAL"] },
-      { range: [6, 8], name: "Solar Return", hz: 136.10, freqName: "Earth Year · OM", chakra: "Heart", practice: "OM chanting + grounding", instrument: "136.1 Hz tone or voice", body: "heart", tags: ["PRACTICE", "TRADITIONAL"] },
-      { range: [8, 10], name: "Solar Ascending", hz: 528, freqName: "Transformation / MI", chakra: "Solar Plexus", practice: "activation breathwork", instrument: "528 Hz tone", body: "core", tags: ["TRADITIONAL", "CONTESTED"] },
-      { range: [10, 14], name: "Solar Peak", hz: 194.18, freqName: "Earth Day", chakra: "Root / Solar Plexus", practice: "dynamic movement + rhythm", instrument: "drum / body percussion", body: "legs", tags: ["PRACTICE", "TRADITIONAL"] },
-      { range: [14, 17], name: "Solar Descending", hz: 741, freqName: "Expression / SOL", chakra: "Throat", practice: "creative expression / toning", instrument: "voice or singing bowl", body: "throat", tags: ["TRADITIONAL"] },
-      { range: [17, 19], name: "Solar Setting", hz: 639, freqName: "Connection / FA", chakra: "Heart", practice: "relationship meditation", instrument: "singing bowl", body: "heart", tags: ["TRADITIONAL"] },
-      { range: [19, 21], name: "Twilight", hz: 432, freqName: "Verdi A", chakra: "Third Eye / Heart", practice: "gentle sound bath", instrument: "soft drone", body: "head", tags: ["PRACTICE", "ANECDOTAL"] },
-      { range: [21, 23], name: "Stellar Gate", hz: 210.42, freqName: "Synodic Moon", chakra: "Sacral", practice: "lunar attunement / emotional processing", instrument: "theta binaural or soft tone", body: "pelvis", tags: ["TRADITIONAL"] },
-      { range: [23, 24], name: "Nadir", hz: 3, freqName: "Delta", chakra: "Root", practice: "sleep preparation", instrument: "silence or very low binaural", body: "legs", tags: ["BIOPHYSICAL", "PRACTICE"] },
-      { range: [0, 2], name: "Nadir", hz: 3, freqName: "Delta", chakra: "Root", practice: "sleep preparation", instrument: "silence or very low binaural", body: "legs", tags: ["BIOPHYSICAL", "PRACTICE"] },
-      { range: [2, 4], name: "Void / Liminal", hz: 7.83, freqName: "Schumann", chakra: "Crown / Root", practice: "dream incubation / earth connection", instrument: "Schumann drone", body: "head", tags: ["EXPERIMENTAL", "TRADITIONAL"] }
-    ];
-
-    const frequencyLibrary = [
-      { hz: 7.83, name: "Schumann Resonance", class: "C/D", use: "earth-connection, liminal practice", evidence: ["EXPERIMENTAL", "TRADITIONAL"] },
-      { hz: 40, name: "Pacinian / Vibrotactile", class: "B", use: "mechanoreceptor-oriented proprioceptive reset", evidence: ["BIOPHYSICAL", "PRACTICE"] },
-      { hz: 136.10, name: "Earth Year · OM", class: "C", use: "heart-centered grounding practice", evidence: ["TRADITIONAL", "PRACTICE"] },
-      { hz: 172.06, name: "Platonic Year", class: "C", use: "crown/cosmic unity symbolic practice", evidence: ["TRADITIONAL"] },
-      { hz: 194.18, name: "Earth Day", class: "C", use: "root vitality / rhythmic movement", evidence: ["TRADITIONAL", "PRACTICE"] },
-      { hz: 210.42, name: "Synodic Moon", class: "C", use: "lunar/sacral attunement", evidence: ["TRADITIONAL"] },
-      { hz: 432, name: "Verdi A", class: "C", use: "relaxation tuning reference", evidence: ["ANECDOTAL", "PRACTICE"] },
-      { hz: 528, name: "Solfeggio MI", class: "C", use: "symbolic activation; contested biological claims", evidence: ["TRADITIONAL", "CONTESTED"] },
-      { hz: 639, name: "Solfeggio FA", class: "C", use: "connection meditation", evidence: ["TRADITIONAL"] },
-      { hz: 741, name: "Solfeggio SOL", class: "C", use: "expression / creative unblocking", evidence: ["TRADITIONAL"] },
-      { hz: 852, name: "Solfeggio LA", class: "C", use: "intuition practice", evidence: ["TRADITIONAL"] },
-      { hz: 963, name: "Solfeggio SI", class: "C", use: "crown meditation", evidence: ["TRADITIONAL"] }
-    ];
-
-    const bodyRegions = {
-      head: { title: "Head / Crown / Third Eye", line: "Crown-root axis, cranial fascia, interoceptive attention.", entry: "004", gate: "Soft vertical scan: crown floating, jaw released, eyes quiet." },
-      throat: { title: "Throat / Voice / Cervical Fascia", line: "Voice as vibration through thoracic-cervical continuity.", entry: "003", gate: "Hum gently at a comfortable pitch, feeling vibration in throat and sternum." },
-      heart: { title: "Heart / Thoracic Fascia", line: "Superficial Front Line emphasis with breath, sternum, ribs, and palms.", entry: "001", gate: "Palms to sternum; slow breath; sense sliding layers around ribs." },
-      core: { title: "Solar Plexus / Abdominal Matrix", line: "Diaphragm, abdominal fascia, ECM continuity, breath pressure.", entry: "005", gate: "Place hands on abdomen; breathe laterally into the ribs for 10 cycles." },
-      pelvis: { title: "Sacral / Pelvic Bowl", line: "Ground substance, fluid attention, pelvic-femoral fascial continuity.", entry: "006", gate: "Slow pelvic clock: tiny circles, no force, watching tissue response." },
-      legs: { title: "Root / Feet / Lower Chain", line: "Standing tensegrity: compression bones floating in tension network.", entry: "004", gate: "Stand with soft knees; press big toe mound, little toe mound, heel evenly." },
-      arms: { title: "Arms / Palms / Reach", line: "Manual fascia, myofascial continuity, touch-to-signal pathway.", entry: "002", gate: "Press palms together lightly, then release by 20%; notice signal shift." }
-    };
-
-    const codexEntries = [
-      { id: "001", title: "Fascia: The Body’s Undernet", tags: ["BIOPHYSICAL", "PRACTICE"], thesis: "Fascia is the continuous tensional network that gives other systems shape, address, and sensory context.", body: "Superficial, deep, visceral, and spinal fascia form a hydrated collagen-elastin-ground-substance matrix. In practice mode, this entry supports hydration, slow loading, gliding, and sensory attention.", mirror: "Technological mirror: infrastructure layer / undernet.", gate: "Fascial hydration: slow joint circles, warm breath, gentle tissue glide, no forcing.", freqs: [136.1, 432] },
-      { id: "002", title: "Mechanotransduction: How Touch Becomes Signal", tags: ["BIOPHYSICAL", "PRACTICE"], thesis: "Mechanical force becomes cellular information through receptors, cytoskeleton, and signaling cascades.", body: "This entry supports the bridge from pressure, vibration, stretch, and touch to sensation and adaptation. Use carefully framed practices, not treatment claims.", mirror: "Technological mirror: piezoelectric sensor and signal transducer.", gate: "40 Hz orientation: brief soft vibration or palm pressure, then stillness to compare sensation.", freqs: [40] },
-      { id: "003", title: "Myofascial Meridians: Anatomy Trains Meet Energy Lines", tags: ["PRACTICE", "TRADITIONAL"], thesis: "Different body maps can be overlaid as navigational systems without pretending they are identical.", body: "The app uses meridian and myofascial line language as a cartographic overlay for focus, not as diagnosis.", mirror: "Technological mirror: network topology and layered mapping.", gate: "Trace one body line slowly with attention, then journal the region that felt most available.", freqs: [210.42, 741] },
-      { id: "004", title: "Tensegrity: Architecture of Aliveness", tags: ["BIOPHYSICAL", "PRACTICE"], thesis: "Living posture behaves less like stacked blocks and more like compression elements suspended in tension.", body: "This entry drives standing, balance, and soft structural awareness practices.", mirror: "Technological mirror: distributed structural network.", gate: "Stand tall with soft knees; imagine bones floating inside a tension web.", freqs: [172.06, 3] },
-      { id: "005", title: "Extracellular Matrix: The Body’s Living Scaffold", tags: ["BIOPHYSICAL"], thesis: "The ECM is a biochemical and mechanical field surrounding cells.", body: "This entry supports skin rolling, tissue awareness, and surface-to-depth mapping.", mirror: "Technological mirror: cloud infrastructure and cellular environment.", gate: "Gently lift and roll superficial skin/fascia where comfortable; compare texture before/after.", freqs: [432, 285] },
-      { id: "006", title: "Ground Substance: The Body’s Liquid Crystal", tags: ["BIOPHYSICAL", "PRACTICE"], thesis: "The gel-like matrix of fascia changes state with hydration, temperature, load, and time.", body: "This entry supports thixotropy-oriented slow pressure rather than aggressive rolling.", mirror: "Technological mirror: smart fluid / adaptive medium.", gate: "Place a soft ball under a comfortable area for 60–90 seconds; wait for melting rather than forcing.", freqs: [285, 528] }
-    ];
-
-    let ctx = null, osc = null, gain = null, activeHz = null;
-    let current = {};
-    let timer = { total: 1500, remaining: 1500, running: false, phaseIndex: 0, interval: null };
-    let selectedDuration = 25;
-
-    function $(id) { return document.getElementById(id); }
-    function all(sel) { return Array.from(document.querySelectorAll(sel)); }
-    function pad(n) { return String(n).padStart(2, "0"); }
-    function todayKey(d = new Date()) { return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
-    function load(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } }
-    function save(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
-    function toast(msg) { const t=$("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"), 2200); }
-
-    function sunSign(d) {
-      const m = d.getMonth()+1, day = d.getDate();
-      const signs = [["Capricorn",1,20],["Aquarius",2,19],["Pisces",3,21],["Aries",4,20],["Taurus",5,21],["Gemini",6,21],["Cancer",7,23],["Leo",8,23],["Virgo",9,23],["Libra",10,23],["Scorpio",11,22],["Sagittarius",12,22],["Capricorn",12,32]];
-      for (const [name, month, cutoff] of signs) if (m === month && day < cutoff) return name;
-      return signs.find(s => s[1] === m+1)?.[0] || "Capricorn";
-    }
-
-    function moonPhase(d) {
-      const knownNew = Date.UTC(2000,0,6,18,14);
-      const days = (d.getTime() - knownNew) / 86400000;
-      const synodic = 29.53058867;
-      const age = ((days % synodic) + synodic) % synodic;
-      const illum = Math.round((1 - Math.cos((age / synodic) * Math.PI * 2)) / 2 * 100);
-      const phases = [[1.84566, "New Moon", "🌑"], [5.53699, "Waxing Crescent", "🌒"], [9.22831, "First Quarter", "🌓"], [12.91963, "Waxing Gibbous", "🌔"], [16.61096, "Full Moon", "🌕"], [20.30228, "Waning Gibbous", "🌖"], [23.99361, "Last Quarter", "🌗"], [27.68493, "Waning Crescent", "🌘"], [29.53059, "New Moon", "🌑"]];
-      const found = phases.find(p => age < p[0]);
-      return { name: found[1], emoji: found[2], illumination: illum, age };
-    }
-
-    function getPhaseRow(date = new Date()) {
-      const h = date.getHours() + date.getMinutes()/60;
-      return phaseRows.find(r => h >= r.range[0] && h < r.range[1]) || phaseRows[1];
-    }
-
-    function planetaryHour(date = new Date()) {
-      const order = ["Saturn ♄","Jupiter ♃","Mars ♂","Sun ☉","Venus ♀","Mercury ☿","Moon ☽"];
-      const dayRulers = ["Sun ☉","Moon ☽","Mars ♂","Mercury ☿","Jupiter ♃","Venus ♀","Saturn ♄"];
-      const start = order.indexOf(dayRulers[date.getDay()]);
-      return order[(start + date.getHours()) % order.length];
-    }
-
-    function badge(label) {
-      const cls = label.includes("BIO") ? "bio" : label.includes("EXPER") ? "experimental" : label.includes("CONTEST") || label.includes("SPEC") ? "speculative" : "practice";
-      return `<span class="badge ${cls}">${label}</span>`;
-    }
-
-    function setContext() {
-      const d = new Date();
-      const moon = moonPhase(d);
-      const row = getPhaseRow(d);
-      current = { date: d, moon, row, region: bodyRegions[row.body] || bodyRegions.heart };
-      $("clock").textContent = d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
-      $("solarPhase").textContent = row.name;
-      $("sunMoon").textContent = `☉ ${sunSign(d)} · ${moon.emoji} ${moon.name} ${moon.illumination}%`;
-      $("planetHour").textContent = planetaryHour(d);
-      $("todayHz").textContent = row.hz;
-      $("todayName").textContent = row.freqName;
-      $("todayUse").textContent = `${row.practice} · ${row.chakra} · ${row.instrument}`;
-      $("todayBadges").innerHTML = row.tags.map(badge).join("");
-      setBodyRegion(row.body);
-    }
-
-    function setBodyRegion(key) {
-      all(".region").forEach(r => r.classList.toggle("active", r.dataset.region === key));
-      const data = bodyRegions[key] || bodyRegions.heart;
-      current.regionKey = key; current.region = data;
-      $("bodyTitle").textContent = data.title;
-      $("bodyDetail").textContent = data.line;
-      $("practiceGate").textContent = data.gate;
-    }
-
-    function renderCodex() {
-      const q = $("codexSearch").value.toLowerCase().trim();
-      const entries = codexEntries.filter(e => !q || JSON.stringify(e).toLowerCase().includes(q));
-      $("codexList").innerHTML = entries.map(e => `<details class="item" ${entries.length === 1 ? "open" : ""}><summary>${e.id} — ${e.title}</summary><div class="row tight" style="margin:.6rem 0">${e.tags.map(badge).join("")}</div><p><strong>Core thesis:</strong> ${e.thesis}</p><p>${e.body}</p><p><strong>Mirror:</strong> ${e.mirror}</p><p><strong>Practice gate:</strong> ${e.gate}</p><p><span class="label">Linked Frequencies</span>${e.freqs.join(", ")} Hz</p></details>`).join("") || `<p>No Codex entry found.</p>`;
-    }
-
-    function renderFrequencies() {
-      $("freqList").innerHTML = frequencyLibrary.map(f => `<div class="item"><div class="frequency"><div><h3>${f.hz} Hz · ${f.name}</h3><p>${f.use}</p><div class="row tight">${f.evidence.map(badge).join("")}<span class="badge">Class ${f.class}</span></div></div><button data-playhz="${f.hz}">▶</button></div></div>`).join("");
-    }
-
-    function ensureAudio() { if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === "suspended") ctx.resume(); }
-
-    function stopTone() {
-      if (osc) { try { osc.stop(); } catch {} osc.disconnect(); gain.disconnect(); }
-      osc = null; gain = null; activeHz = null;
-      $("todayWave").classList.add("paused"); $("soundWave").classList.add("paused");
-    }
-
-    function playTone(hz) {
-      hz = Number(hz);
-      if (!hz || hz < 0.1) return toast("Choose a frequency above 0 Hz.");
-      if (activeHz === hz) { stopTone(); return; }
-      stopTone(); ensureAudio();
-      osc = ctx.createOscillator(); gain = ctx.createGain();
-      osc.type = "sine"; osc.frequency.value = hz; gain.gain.value = 0.045;
-      osc.connect(gain).connect(ctx.destination); osc.start(); activeHz = hz;
-      $("customHz").value = hz; $("todayWave").classList.remove("paused"); $("soundWave").classList.remove("paused");
-      toast(`Playing ${hz} Hz`);
-    }
-
-    function setDuration(min) { selectedDuration = min; timer.total = min * 60; timer.remaining = timer.total; timer.phaseIndex = 0; updateTimerUI(); }
-    function phasePlan() {
-      if (selectedDuration === 10) return [{ name:"◇ Calibrate", seconds:120, note:"Breath and orientation" },{ name:"◆ Activate", seconds:360, note:"Primary practice" },{ name:"◇ Integrate", seconds:120, note:"Ground and notice" }];
-      if (selectedDuration === 15) return [{ name:"◇ Calibrate", seconds:180, note:"Breath and orientation" },{ name:"◆ Activate", seconds:540, note:"Primary practice" },{ name:"◇ Integrate", seconds:180, note:"Ground and notice" }];
-      return [{ name:"◇ Calibrate", seconds:300, note:"Breath and orientation" },{ name:"◆ Activate", seconds:900, note:"Primary practice" },{ name:"◇ Integrate", seconds:300, note:"Ground and notice" }];
-    }
-    function currentPhaseElapsedTarget() { return phasePlan().slice(0, timer.phaseIndex + 1).reduce((s, p) => s + p.seconds, 0); }
-    function updateTimerUI() {
-      const m = Math.floor(timer.remaining / 60), s = timer.remaining % 60;
-      $("timerNumber").textContent = `${pad(m)}:${pad(s)}`;
-      $("timerFace").style.setProperty("--progress", `${Math.round(((timer.total - timer.remaining) / timer.total) * 100)}%`);
-      const phase = phasePlan()[timer.phaseIndex] || phasePlan()[2];
-      $("phaseBadge").textContent = phase.name; $("timerPhaseNote").textContent = phase.note;
-    }
-    function tick() { if (!timer.running) return; timer.remaining = Math.max(0, timer.remaining - 1); const elapsed = timer.total - timer.remaining; if (elapsed >= currentPhaseElapsedTarget() && timer.phaseIndex < 2) timer.phaseIndex++; updateTimerUI(); if (timer.remaining <= 0) finishSession(); }
-    function startTimer() { if (!timer.interval) timer.interval = setInterval(tick, 1000); timer.running = true; toast("Session started."); }
-    function pauseTimer() { timer.running = !timer.running; toast(timer.running ? "Session resumed." : "Session paused."); }
-    function nextPhase() { const plan = phasePlan(); if (timer.phaseIndex < 2) { timer.phaseIndex++; timer.remaining = plan.slice(timer.phaseIndex).reduce((s,p)=>s+p.seconds,0); updateTimerUI(); } }
-
-    function updateStreak(sessions) {
-      const days = [...new Set(sessions.map(s => s.date))].sort();
-      let streak = 0, cursor = new Date(todayKey() + "T00:00:00");
-      for (;;) { const key = todayKey(cursor); if (days.includes(key)) { streak++; cursor.setDate(cursor.getDate() - 1); } else break; }
-      return streak;
-    }
-
-    function finishSession() {
-      timer.running = false;
-      const sessions = load(STORE.sessions, []);
-      const d = new Date();
-      sessions.unshift({ date: todayKey(d), time: d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }), solarPhase: current.row.name, moonPhase: current.moon.name, frequency: current.row.hz, frequencyName: current.row.freqName, bodyFocus: current.region.title, codexEntry: current.region.entry, practiceType: current.row.practice, duration: selectedDuration, note: $("journalNote").value.trim(), completed: true });
-      save(STORE.sessions, sessions); $("journalNote").value = ""; setDuration(selectedDuration); renderJournal(); toast("Session logged.");
-    }
-
-    function renderJournal() {
-      const sessions = load(STORE.sessions, []);
-      $("streakValue").textContent = `${updateStreak(sessions)} days`; $("sessionCount").textContent = sessions.length;
-      $("sessionList").innerHTML = sessions.length ? sessions.map(s => `<div class="item"><h3>${s.date} · ${s.time}</h3><p>${s.duration} min · ${s.frequency} Hz ${s.frequencyName} · ${s.bodyFocus}</p><p><span class="label">Practice</span>${s.practiceType}</p>${s.note ? `<p><span class="label">Note</span>${s.note}</p>` : ""}</div>`).join("") : `<p>No sessions yet.</p>`;
-    }
-
-    function saveExperiment() {
-      const experiments = load(STORE.experiments, []), d = new Date();
-      experiments.unshift({ date: todayKey(d), time: d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }), name: $("expName").value.trim() || "Untitled Aqua Lab experiment", hypothesis: $("expHypothesis").value.trim(), volumeMl: Number($("waterVolume").value), tempC: $("waterTemp").value, container: $("containerType").value, controlMode: $("controlMode").value, frequencyHz: Number($("expHz").value), durationMin: Number($("expDuration").value), vocalInput: $("vocalInput").value.trim(), measurements: $("measurements").value.trim(), evidenceStatus: "EXPERIMENTAL / PERSONAL LOG ONLY" });
-      save(STORE.experiments, experiments); ["expName","expHypothesis","vocalInput","measurements"].forEach(id => $(id).value = ""); renderExperiments(); toast("Experiment saved.");
-    }
-
-    function renderExperiments() {
-      const experiments = load(STORE.experiments, []);
-      $("experimentList").innerHTML = experiments.length ? experiments.map(e => `<div class="item"><h3>${e.name}</h3><div class="row tight">${badge("EXPERIMENTAL")}${badge("PERSONAL LOG")}</div><p>${e.date} · ${e.time} · ${e.frequencyHz} Hz · ${e.durationMin} min</p><p><span class="label">Protocol</span>${e.controlMode}; ${e.volumeMl} ml; ${e.container}; ${e.tempC || "—"} °C</p>${e.hypothesis ? `<p><span class="label">Hypothesis</span>${e.hypothesis}</p>` : ""}${e.measurements ? `<p><span class="label">Measurements / Observations</span>${e.measurements}</p>` : ""}</div>`).join("") : `<p>No Aqua Lab experiments yet.</p>`;
-    }
-
-    function downloadJson(name, data) {
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob), a = document.createElement("a");
-      a.href = url; a.download = name; a.click(); URL.revokeObjectURL(url);
-    }
-    function switchScreen(name) {
-      all(".screen").forEach(s => s.classList.toggle("active", s.id === `screen-${name}`));
-      all(".nav button").forEach(b => b.classList.toggle("active", b.dataset.screen === name));
-      if (name === "journal") renderJournal(); if (name === "aqua") renderExperiments(); if (name === "codex") renderCodex();
-    }
-
-    all(".nav button").forEach(btn => btn.addEventListener("click", () => switchScreen(btn.dataset.screen)));
-    all(".region").forEach(r => r.addEventListener("click", () => setBodyRegion(r.dataset.region)));
-    $("todayPlay").addEventListener("click", () => playTone(current.row.hz));
-    $("customPlay").addEventListener("click", () => playTone($("customHz").value));
-    $("freqList").addEventListener("click", e => { const b = e.target.closest("[data-playhz]"); if (b) playTone(b.dataset.playhz); });
-    $("codexSearch").addEventListener("input", renderCodex);
-    $("codexJump").addEventListener("click", () => { $("codexSearch").value = current.region.entry; renderCodex(); switchScreen("codex"); });
-    all("[data-duration]").forEach(b => b.addEventListener("click", () => setDuration(Number(b.dataset.duration))));
-    $("startSession").addEventListener("click", startTimer);
-    $("pauseSession").addEventListener("click", pauseTimer);
-    $("nextPhase").addEventListener("click", nextPhase);
-    $("finishSession").addEventListener("click", finishSession);
-    $("saveExperiment").addEventListener("click", saveExperiment);
-    $("exportSessions").addEventListener("click", () => downloadJson("resonance-codex-sessions.json", load(STORE.sessions, [])));
-    $("exportExperiments").addEventListener("click", () => downloadJson("resonance-codex-aqua-lab.json", load(STORE.experiments, [])));
-    $("clearSessions").addEventListener("click", () => { if (confirm("Clear all session logs?")) { save(STORE.sessions, []); renderJournal(); }});
-    $("clearExperiments").addEventListener("click", () => { if (confirm("Clear all experiment logs?")) { save(STORE.experiments, []); renderExperiments(); }});
-
-    window.addEventListener("beforeunload", stopTone);
-    setContext(); setInterval(setContext, 30000); renderCodex(); renderFrequencies(); renderJournal(); renderExperiments(); setDuration(25);
-  </script>
+<main class="app">
+<header class="topbar"><div class="brand"><h1>Resonance Codex</h1><span class="badge practice">MVP 2</span></div><p class="subtitle">Temporal planner + TechnoBioFascia companion. Astronomy, astrology, frequency, and practice layers are separated.</p><section class="timegrid"><div class="mini"><span class="label">Time</span><span class="value" id="clock">—</span></div><div class="mini"><span class="label">Solar Phase</span><span class="value" id="solarPhase">—</span></div><div class="mini"><span class="label">Sun / Moon</span><span class="value" id="sunMoon">—</span></div><div class="mini"><span class="label">Planetary Hour</span><span class="value" id="planetHour">—</span></div></section></header>
+<section id="screen-today" class="screen active"><article class="card strong"><h2>Now</h2><div class="frequency"><div><div class="hz"><span id="todayHz">—</span> Hz</div><h3 id="todayName">—</h3><p id="todayUse">—</p></div><button class="primary" id="todayPlay">▶ Tone</button></div><div class="wave paused" id="todayWave"></div><div class="row tight" id="todayBadges"></div></article><article class="card"><h2>Audit Layer</h2><div id="todayAudit" class="audit-box">—</div></article><article class="card"><h2>Body Focus Map</h2><div class="bodymap"><svg class="figure" viewBox="0 0 140 240"><circle cx="70" cy="28" r="18" class="region" data-region="head"></circle><rect x="48" y="50" width="44" height="28" rx="13" class="region" data-region="throat"></rect><rect x="34" y="78" width="72" height="42" rx="18" class="region" data-region="heart"></rect><rect x="38" y="120" width="64" height="44" rx="16" class="region" data-region="core"></rect><rect x="44" y="164" width="52" height="28" rx="14" class="region" data-region="pelvis"></rect><path d="M54 192 L42 228 M86 192 L98 228" class="region" data-region="legs" stroke-width="12" stroke-linecap="round" fill="none"></path><path d="M34 88 L12 136 M106 88 L128 136" class="region" data-region="arms" stroke-width="10" stroke-linecap="round" fill="none"></path><line x1="70" y1="48" x2="70" y2="194" stroke="rgba(222,201,142,.5)" stroke-width="1.5" stroke-dasharray="4 4"></line></svg><div><h3 id="bodyTitle">—</h3><p id="bodyDetail">—</p><p><span class="label">Practice Gate</span><span id="practiceGate">—</span></p><button id="codexJump">Open linked Codex entry</button></div></div></article><article class="card"><h2>Session Builder</h2><div class="timer"><span class="badge practice" id="phaseBadge">◇ Calibrate</span><div class="timer-face" id="timerFace"><div><div class="timer-number" id="timerNumber">25:00</div><small id="timerPhaseNote">Breath and orientation</small></div></div><div class="three"><button data-duration="10">10 min</button><button data-duration="15">15 min</button><button data-duration="25" class="primary">25 min</button></div><div class="two" style="margin-top:.55rem"><button class="primary" id="startSession">Begin</button><button id="nextPhase">Next Phase</button></div><div class="two" style="margin-top:.55rem"><button id="pauseSession">Pause</button><button id="finishSession">Finish + Log</button></div></div></article><article class="card"><h2>Evidence Boundary</h2><p class="notice">This is a reflection/practice/research notebook, not a diagnostic, medical, purification, or treatment device. Planetary frequencies are octave correspondences, not physical healing emissions.</p></article></section>
+<section id="screen-planner" class="screen"><article class="card strong"><h2>Temporal Planner</h2><p class="notice">Each card now displays its derivation layer: astronomical octave, Solfeggio tradition, musical tuning, or neurological/practice band.</p><div class="planner-grid" id="plannerList"></div></article><article class="card"><h2>Selected Time Block</h2><div id="plannerDetail" class="stack"></div></article></section>
+<section id="screen-codex" class="screen"><article class="card"><h2>Living Codex</h2><input id="codexSearch" placeholder="Search fascia, tensegrity, interstitium, 40 Hz..." /><div class="list" id="codexList" style="margin-top:.75rem"></div></article></section>
+<section id="screen-sound" class="screen"><article class="card"><h2>Sound Lab</h2><p class="notice">Use tones softly. Stop if uncomfortable. Claims are labeled by evidence class.</p><div class="two"><input id="customHz" type="number" min="0.1" step="0.01" value="136.10" /><button class="primary" id="customPlay">▶ Custom Tone</button></div><div class="wave paused" id="soundWave"></div></article><article class="card"><h2>Frequency Library</h2><div class="list" id="freqList"></div></article></section>
+<section id="screen-aqua" class="screen"><article class="card"><h2>Aqua Lab / ARBP Notebook</h2><p class="notice danger-note">Exploratory protocol logging only. Not medical advice. Not water purification. Causality is not assumed.</p><div class="stack"><input id="expName" placeholder="Experiment name" /><textarea id="expHypothesis" placeholder="Hypothesis / intention statement"></textarea><div class="two"><input id="waterVolume" type="number" min="1" value="250" /><input id="waterTemp" type="number" step="0.1" placeholder="Temp °C" /></div><div class="two"><select id="containerType"><option>Glass</option><option>Ceramic</option><option>Metal</option><option>Plastic</option><option>Other</option></select><select id="controlMode"><option>Control + Treated sample</option><option>Treated sample only</option><option>Observation log only</option></select></div><div class="two"><input id="expHz" type="number" step="0.01" value="136.10" /><input id="expDuration" type="number" value="10" min="1" /></div><input id="vocalInput" placeholder="Vocal input / phrase / phoneme" /><textarea id="measurements" placeholder="Before/after measurements or observations"></textarea><button class="primary" id="saveExperiment">Save Experiment Log</button></div></article><article class="card"><h2>Experiment History</h2><div class="two"><button id="exportExperiments">Export JSON</button><button class="danger" id="clearExperiments">Clear</button></div><div class="list" id="experimentList" style="margin-top:.75rem"></div></article></section>
+<section id="screen-journal" class="screen"><article class="card"><h2>Journal + Streaks</h2><div class="two"><div class="mini"><span class="label">Current Streak</span><span class="value" id="streakValue">0 days</span></div><div class="mini"><span class="label">Sessions</span><span class="value" id="sessionCount">0</span></div></div><textarea id="journalNote" placeholder="Optional session note..."></textarea><div class="two"><button id="exportSessions">Export JSON</button><button class="danger" id="clearSessions">Clear</button></div></article><article class="card"><h2>Session History</h2><div class="list" id="sessionList"></div></article></section>
+</main>
+<nav class="nav"><button data-screen="today" class="active">Today</button><button data-screen="planner">Planner</button><button data-screen="codex">Codex</button><button data-screen="sound">Sound</button><button data-screen="aqua">Aqua</button><button data-screen="journal">Journal</button></nav><div class="toast" id="toast"></div>
+<script>
+const STORE={sessions:"resonance_codex_sessions_v2",experiments:"resonance_codex_experiments_v2"};
+const planner=[
+{id:"pre_dawn",range:[4,6],time:"Pre-dawn",phase:"Brahma Muhurta",hz:172.06,name:"Platonic Year",audit:"platonic_year",derived:"25,920-year precessional long-cycle convention",octave:47,layer:"symbolic long-cycle meditation correspondence",planet:"Saturn / Jupiter",chakra:"Crown",body:"head",practice:"Silent meditation",instrument:"None / digital drone",duration:30,codex:["004","010"],boundary:"Use as symbolic long-cycle meditation timing; not a cosmic correction frequency.",tags:["TRADITIONAL","PRACTICE"]},
+{id:"dawn",range:[6,8],time:"Dawn",phase:"Solar Return",hz:136.10,name:"Earth Year / OM",audit:"earth_year",derived:"Earth year convention octave-transposed into audible range",octave:32,layer:"earth-year centering correspondence",planet:"Sun / Venus",chakra:"Heart",body:"heart",practice:"OM chanting, grounding",instrument:"136.1 Hz tuning fork",duration:20,codex:["001","007"],boundary:"Use as centering and practice correspondence; not verified physiological treatment.",tags:["TRADITIONAL","PRACTICE"]},
+{id:"morning",range:[8,10],time:"Morning",phase:"Solar Ascending",hz:528,name:"Solfeggio MI",audit:null,derived:"Solfeggio practice tradition, not an astronomical period",octave:null,layer:"contested/anecdotal Solfeggio practice correspondence",planet:"Mercury",chakra:"Solar Plexus",body:"core",practice:"Activation tone, breathwork",instrument:"528 Hz tone",duration:15,codex:["005","006"],boundary:"Do not render DNA-repair language as fact. Use transformation as symbolic practice language.",tags:["TRADITIONAL","CONTESTED"]},
+{id:"midday",range:[10,14],time:"Midday",phase:"Solar Peak",hz:194.18,name:"Earth Day",audit:"earth_day",derived:"24-hour mean solar day octave-transposed into audible range",octave:24,layer:"day-cycle vitality correspondence",planet:"Mars / Sun",chakra:"Root / Solar Plexus",body:"legs",practice:"Dynamic movement, drum",instrument:"Frame drum",duration:15,codex:["004","008"],boundary:"Use for rhythmic movement prompt; not a claim that the tone increases vitality.",tags:["TRADITIONAL","PRACTICE"]},
+{id:"afternoon",range:[14,17],time:"Afternoon",phase:"Solar Descending",hz:741,name:"Solfeggio SOL",audit:null,derived:"Solfeggio practice tradition, not an astronomical period",octave:null,layer:"anecdotal Solfeggio practice correspondence",planet:"Mercury / Jupiter",chakra:"Throat",body:"throat",practice:"Creative expression",instrument:"Voice / singing bowl",duration:20,codex:["003","009"],boundary:"Do not render detoxification claims. Use expression/creative practice language only.",tags:["TRADITIONAL"]},
+{id:"dusk",range:[17,19],time:"Dusk",phase:"Solar Setting",hz:639,name:"Solfeggio FA",audit:null,derived:"Solfeggio practice tradition, not an astronomical period",octave:null,layer:"anecdotal Solfeggio practice correspondence",planet:"Venus",chakra:"Heart",body:"heart",practice:"Relationship meditation",instrument:"Singing bowls",duration:20,codex:["001","003"],boundary:"Use connection as contemplative theme; not relationship or cardiac effect.",tags:["TRADITIONAL"]},
+{id:"evening",range:[19,21],time:"Evening",phase:"Twilight",hz:432,name:"432 Hz tuning",audit:null,derived:"musical tuning/practice association, not an astronomical period",octave:null,layer:"anecdotal musical tuning practice correspondence",planet:"Moon / Saturn",chakra:"Third Eye",body:"head",practice:"Gentle sound bath",instrument:"Soft drone",duration:25,codex:["004","010"],boundary:"Do not claim 432 Hz is objectively superior or universally healing.",tags:["ANECDOTAL","PRACTICE"]},
+{id:"night",range:[21,23],time:"Night",phase:"Stellar Gate",hz:210.42,name:"Moon Synodic",audit:"moon_synodic",derived:"mean synodic month / lunar phase cycle",octave:29,layer:"lunar phase / water / night-practice correspondence",planet:"Moon",chakra:"Sacral",body:"pelvis",practice:"Lunar attunement",instrument:"Theta binaural or soft tone",duration:20,codex:["003","010"],boundary:"This is synodic/phase-cycle correspondence, not the Moon's sidereal orbit and not a hormone/mood claim.",tags:["TRADITIONAL"]},
+{id:"deep_night_a",range:[23,24],time:"Deep Night",phase:"Nadir",hz:3,name:"Delta",audit:null,derived:"brainwave band convention, not an astronomical period",octave:null,layer:"somatic/neurological sleep-prep association",planet:"Saturn",chakra:"Root",body:"legs",practice:"Sleep preparation",instrument:"Silence or low binaural",duration:30,codex:["004","008"],boundary:"Use as sleep-prep routine. Do not claim guaranteed entrainment or medical sleep treatment.",tags:["BIOPHYSICAL","PRACTICE"]},
+{id:"deep_night_b",range:[0,2],time:"Deep Night",phase:"Nadir",hz:3,name:"Delta",audit:null,derived:"brainwave band convention, not an astronomical period",octave:null,layer:"somatic/neurological sleep-prep association",planet:"Saturn",chakra:"Root",body:"legs",practice:"Sleep preparation",instrument:"Silence or low binaural",duration:30,codex:["004","008"],boundary:"Use as sleep-prep routine. Do not claim guaranteed entrainment or medical sleep treatment.",tags:["BIOPHYSICAL","PRACTICE"]},
+{id:"liminal",range:[2,4],time:"Liminal",phase:"Void / Liminal",hz:7.83,name:"Schumann Fundamental",audit:null,derived:"earth-ionosphere resonance reference / practice association",octave:null,layer:"earth-resonance and liminal-practice correspondence",planet:"Neptune / Pluto",chakra:"Crown / Root",body:"head",practice:"Dream incubation",instrument:"Digital altar / Schumann drone",duration:15,codex:["004","010"],boundary:"Use as symbolic liminal practice. Do not claim biological synchronization or dream control.",tags:["EXPERIMENTAL","TRADITIONAL"]}
+];
+const frequencyLibrary=[...new Map(planner.map(p=>[p.hz,{hz:p.hz,name:p.name,use:p.layer,evidence:p.tags,derived:p.derived,boundary:p.boundary}])).values(),{hz:40,name:"40 Hz vibrotactile",use:"mechanoreceptor-oriented proprioceptive comparison",evidence:["BIOPHYSICAL","PRACTICE"],derived:"somatic practice marker",boundary:"Do not claim disease treatment or guaranteed entrainment."},{hz:140.25,name:"Pluto optional",use:"modern astrology / Scorpio symbolic layer",evidence:["TRADITIONAL","SPECULATIVE"],derived:"dwarf-planet orbital octave correspondence",boundary:"Optional modern astrology metadata only."},{hz:207.36,name:"Uranus",use:"modern Aquarius symbolic layer",evidence:["TRADITIONAL"],derived:"higher octave of Uranus sidereal orbital correspondence",boundary:"Symbolic correspondence, not physical effect."},{hz:211.44,name:"Neptune",use:"modern Pisces symbolic layer",evidence:["TRADITIONAL"],derived:"higher octave of Neptune sidereal orbital correspondence",boundary:"Symbolic correspondence, not physical effect."},{hz:227.43,name:"Moon Sidereal optional",use:"lunar sidereal orbit; keep separate from Moon Synodic",evidence:["TRADITIONAL"],derived:"Moon sidereal orbital period octave correspondence",boundary:"Do not replace 210.42 Hz synodic phase-cycle row."}];
+const bodyRegions={head:{title:"Head / Crown / Third Eye",line:"Crown-root axis, cranial fascia, interoceptive attention.",entry:"004",gate:"Soft vertical scan: crown floating, jaw released, eyes quiet."},throat:{title:"Throat / Voice / Cervical Fascia",line:"Voice as vibration through thoracic-cervical continuity.",entry:"003",gate:"Hum gently at a comfortable pitch, feeling vibration in throat and sternum."},heart:{title:"Heart / Thoracic Fascia",line:"Superficial Front Line emphasis with breath, sternum, ribs, and palms.",entry:"001",gate:"Palms to sternum; slow breath; sense sliding layers around ribs."},core:{title:"Solar Plexus / Abdominal Matrix",line:"Diaphragm, abdominal fascia, ECM continuity, breath pressure.",entry:"005",gate:"Place hands on abdomen; breathe laterally into the ribs for 10 cycles."},pelvis:{title:"Sacral / Pelvic Bowl",line:"Ground substance, fluid attention, pelvic-femoral fascial continuity.",entry:"006",gate:"Slow pelvic clock: tiny circles, no force, watching tissue response."},legs:{title:"Root / Feet / Lower Chain",line:"Standing tensegrity: compression bones floating in tension network.",entry:"004",gate:"Stand with soft knees; press big toe mound, little toe mound, heel evenly."},arms:{title:"Arms / Palms / Reach",line:"Manual fascia, myofascial continuity, touch-to-signal pathway.",entry:"002",gate:"Press palms together lightly, then release by 20%; notice signal shift."}};
+const codexEntries=[
+{id:"001",title:"Fascia: The Body’s Undernet",tags:["BIOPHYSICAL","PRACTICE"],thesis:"Fascia is the continuous tensional network that gives other systems shape, address, and sensory context.",body:"Hydrated collagen-elastin-ground-substance matrix across superficial, deep, visceral, and spinal layers.",gate:"Fascial hydration: slow joint circles, warm breath, gentle tissue glide, no forcing.",freqs:[136.1,432]},
+{id:"002",title:"Mechanotransduction",tags:["BIOPHYSICAL","PRACTICE"],thesis:"Mechanical force becomes cellular information through receptors, cytoskeleton, and signaling cascades.",body:"Touch, pressure, vibration, stretch, and load become signals; practice language stays observational.",gate:"40 Hz orientation: brief soft vibration or palm pressure, then stillness to compare sensation.",freqs:[40]},
+{id:"003",title:"Myofascial Meridians",tags:["TRADITIONAL","PRACTICE"],thesis:"Different body maps can be overlaid as navigational systems without pretending they are identical.",body:"Meridian and myofascial line language act as cartographic overlays, not diagnostic claims.",gate:"Trace one body line slowly with attention, then journal the region that felt most available.",freqs:[210.42,741]},
+{id:"004",title:"Tensegrity",tags:["BIOPHYSICAL","PRACTICE"],thesis:"Living posture behaves like compression elements suspended in tension.",body:"Standing, balance, and soft structural awareness practices.",gate:"Stand tall with soft knees; imagine bones floating inside a tension web.",freqs:[172.06,3,7.83]},
+{id:"005",title:"Extracellular Matrix",tags:["BIOPHYSICAL"],thesis:"The ECM is a biochemical and mechanical field surrounding cells.",body:"Supports surface-to-depth tissue mapping and scaffold metaphors.",gate:"Gently lift and roll superficial skin/fascia where comfortable; compare texture before and after.",freqs:[432,285]},
+{id:"006",title:"Ground Substance",tags:["BIOPHYSICAL","PRACTICE"],thesis:"The gel-like matrix of fascia changes state with hydration, temperature, load, and time.",body:"Supports thixotropy-oriented slow pressure rather than aggressive rolling.",gate:"Place a soft ball under a comfortable area for 60–90 seconds; wait for melting rather than forcing.",freqs:[285,528]},
+{id:"007",title:"Collagen Architecture",tags:["BIOPHYSICAL","ANATOMICAL"],thesis:"Collagen is the body's hierarchical cable system from molecular helix to whole-body force architecture.",body:"Adds tensile continuity, bundling, cross-linking, and load distribution to the body map.",gate:"Use slow low-force line stretch; track continuity without bouncing.",freqs:[40,136.1]},
+{id:"008",title:"Piezoelectricity",tags:["BIOPHYSICAL","CONTESTED"],thesis:"Mechanical stress can generate electrical charge in collagen-rich and mineralized tissues.",body:"Real material principle; broad therapeutic claims require separate evidence.",gate:"Gentle load-and-listen standing practice; sensation is observation, not proof.",freqs:[40,194.18]},
+{id:"009",title:"Fascial Innervation",tags:["BIOPHYSICAL","ANATOMICAL"],thesis:"Fascia is a richly innervated sensory field.",body:"Pressure, stretch, vibration, pain, and position are tracked as signals, not diagnosis.",gate:"Map light, medium, and sustained pressure sensations; stop if sharp or alarming.",freqs:[40,741]},
+{id:"010",title:"Interstitium",tags:["ANATOMICAL","PRACTICE"],thesis:"Connective tissue is a fluid-filled continuity of flow, pressure, and exchange.",body:"Fluid-space and connective-tissue language, avoiding sensational hidden-organ claims.",gate:"Fluid-continuity breathing and pressure awareness; observe without forcing.",freqs:[210.42,432]}
+];
+let ctx=null,osc=null,gain=null,activeHz=null,current={},timer={total:1500,remaining:1500,running:false,phaseIndex:0,interval:null},selectedDuration=25,selectedPlanner=null;
+function $(id){return document.getElementById(id)}function all(s){return Array.from(document.querySelectorAll(s))}function pad(n){return String(n).padStart(2,"0")}function todayKey(d=new Date()){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}function load(k,f){try{return JSON.parse(localStorage.getItem(k))??f}catch{return f}}function save(k,v){localStorage.setItem(k,JSON.stringify(v))}function toast(m){const t=$("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+function sunSign(d){const m=d.getMonth()+1,day=d.getDate(),s=[["Capricorn",1,20],["Aquarius",2,19],["Pisces",3,21],["Aries",4,20],["Taurus",5,21],["Gemini",6,21],["Cancer",7,23],["Leo",8,23],["Virgo",9,23],["Libra",10,23],["Scorpio",11,22],["Sagittarius",12,22],["Capricorn",12,32]];for(const[x,mo,c]of s)if(m===mo&&day<c)return x;return s.find(x=>x[1]===m+1)?.[0]||"Capricorn"}
+function moonPhase(d){const known=Date.UTC(2000,0,6,18,14),syn=29.53058867,days=(d.getTime()-known)/86400000,age=((days%syn)+syn)%syn,illum=Math.round((1-Math.cos((age/syn)*Math.PI*2))/2*100),ph=[[1.84566,"New Moon","🌑"],[5.53699,"Waxing Crescent","🌒"],[9.22831,"First Quarter","🌓"],[12.91963,"Waxing Gibbous","🌔"],[16.61096,"Full Moon","🌕"],[20.30228,"Waning Gibbous","🌖"],[23.99361,"Last Quarter","🌗"],[27.68493,"Waning Crescent","🌘"],[29.53059,"New Moon","🌑"]].find(p=>age<p[0]);return{name:ph[1],emoji:ph[2],illumination:illum,age}}
+function rowNow(d=new Date()){const h=d.getHours()+d.getMinutes()/60;return planner.find(r=>h>=r.range[0]&&h<r.range[1])||planner[1]}function planetaryHour(d=new Date()){const order=["Saturn ♄","Jupiter ♃","Mars ♂","Sun ☉","Venus ♀","Mercury ☿","Moon ☽"],rulers=["Sun ☉","Moon ☽","Mars ♂","Mercury ☿","Jupiter ♃","Venus ♀","Saturn ♄"];return order[(order.indexOf(rulers[d.getDay()])+d.getHours())%order.length]}function badge(x){const c=x.includes("BIO")?"bio":x.includes("EXPER")?"experimental":x.includes("CONTEST")||x.includes("SPEC")?"speculative":"practice";return `<span class="badge ${c}">${x}</span>`}
+function auditHTML(r){return `<p><span class="label">Derived From</span>${r.derived}</p><p><span class="label">Octave</span>${r.octave===null?"not applicable":`+${r.octave}`}</p><p><span class="label">Layer</span>${r.layer}</p><p><span class="label">Boundary</span>${r.boundary}</p>${r.audit?`<p><span class="label">Audit ID</span>${r.audit}</p>`:""}`}
+function setContext(){const d=new Date(),moon=moonPhase(d),row=rowNow(d);current={date:d,moon,row,region:bodyRegions[row.body]||bodyRegions.heart};$("clock").textContent=d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"});$("solarPhase").textContent=row.phase;$("sunMoon").textContent=`☉ ${sunSign(d)} · ${moon.emoji} ${moon.name} ${moon.illumination}%`;$("planetHour").textContent=planetaryHour(d);$("todayHz").textContent=row.hz;$("todayName").textContent=row.name;$("todayUse").textContent=`${row.practice} · ${row.chakra} · ${row.instrument}`;$("todayBadges").innerHTML=row.tags.map(badge).join("");$("todayAudit").innerHTML=auditHTML(row);setBodyRegion(row.body);selectedPlanner=row;renderPlannerDetail(row)}
+function setBodyRegion(k){all(".region").forEach(r=>r.classList.toggle("active",r.dataset.region===k));const d=bodyRegions[k]||bodyRegions.heart;current.regionKey=k;current.region=d;$("bodyTitle").textContent=d.title;$("bodyDetail").textContent=d.line;$("practiceGate").textContent=d.gate}
+function renderPlanner(){const now=current.row?.id;$("plannerList").innerHTML=planner.map(r=>`<button class="planner-row ${r.id===now?'active':''}" data-plan="${r.id}"><span class="label">${r.time} · ${r.phase}</span><h3>${r.hz} Hz · ${r.name}</h3><p>${r.practice}</p><div class="row tight">${r.tags.map(badge).join("")}</div></button>`).join("")}
+function renderPlannerDetail(r=selectedPlanner||current.row||planner[1]){selectedPlanner=r;$("plannerDetail").innerHTML=`<div class="frequency"><div><div class="hz">${r.hz} Hz</div><h3>${r.time} — ${r.phase}</h3><p>${r.name} · ${r.chakra} · ${r.planet}</p></div><button class="primary" data-playhz="${r.hz}">▶ Tone</button></div><div class="audit-box">${auditHTML(r)}</div><div class="two"><div class="mini"><span class="label">Duration</span><span class="value">${r.duration} min</span></div><div class="mini"><span class="label">Codex</span><span class="value">${r.codex.join(", ")}</span></div></div><p><span class="label">Instrument</span>${r.instrument}</p>`}
+function renderCodex(){const q=$("codexSearch").value.toLowerCase().trim();const e=codexEntries.filter(x=>!q||JSON.stringify(x).toLowerCase().includes(q));$("codexList").innerHTML=e.map(x=>`<details class="item" ${e.length===1?"open":""}><summary>${x.id} — ${x.title}</summary><div class="row tight" style="margin:.6rem 0">${x.tags.map(badge).join("")}</div><p><strong>Core thesis:</strong> ${x.thesis}</p><p>${x.body}</p><p><strong>Practice gate:</strong> ${x.gate}</p><p><span class="label">Linked Frequencies</span>${x.freqs.join(", ")} Hz</p></details>`).join("")||"<p>No Codex entry found.</p>"}
+function renderFrequencies(){$("freqList").innerHTML=frequencyLibrary.map(f=>`<div class="item"><div class="frequency"><div><h3>${f.hz} Hz · ${f.name}</h3><p>${f.use}</p><p><span class="label">Derived from</span>${f.derived}</p><p><span class="label">Boundary</span>${f.boundary}</p><div class="row tight">${f.evidence.map(badge).join("")}</div></div><button data-playhz="${f.hz}">▶</button></div></div>`).join("")}
+function ensureAudio(){if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();if(ctx.state==="suspended")ctx.resume()}function stopTone(){if(osc){try{osc.stop()}catch{}osc.disconnect();gain.disconnect()}osc=null;gain=null;activeHz=null;$("todayWave").classList.add("paused");$("soundWave").classList.add("paused")}function playTone(hz){hz=Number(hz);if(!hz||hz<.1)return toast("Choose a frequency above 0 Hz.");if(activeHz===hz){stopTone();return}stopTone();ensureAudio();osc=ctx.createOscillator();gain=ctx.createGain();osc.type="sine";osc.frequency.value=hz;gain.gain.value=.04;osc.connect(gain).connect(ctx.destination);osc.start();activeHz=hz;$("customHz").value=hz;$("todayWave").classList.remove("paused");$("soundWave").classList.remove("paused");toast(`Playing ${hz} Hz`)}
+function setDuration(m){selectedDuration=m;timer.total=m*60;timer.remaining=timer.total;timer.phaseIndex=0;updateTimerUI()}function phasePlan(){return selectedDuration===10?[120,360,120]:selectedDuration===15?[180,540,180]:[300,900,300]}function updateTimerUI(){const m=Math.floor(timer.remaining/60),s=timer.remaining%60;$("timerNumber").textContent=`${pad(m)}:${pad(s)}`;$("timerFace").style.setProperty("--progress",`${Math.round(((timer.total-timer.remaining)/timer.total)*100)}%`);const names=["◇ Calibrate","◆ Activate","◇ Integrate"],notes=["Breath and orientation","Primary practice","Ground and notice"];$("phaseBadge").textContent=names[timer.phaseIndex];$("timerPhaseNote").textContent=notes[timer.phaseIndex]}function tick(){if(!timer.running)return;timer.remaining=Math.max(0,timer.remaining-1);const elapsed=timer.total-timer.remaining,target=phasePlan().slice(0,timer.phaseIndex+1).reduce((a,b)=>a+b,0);if(elapsed>=target&&timer.phaseIndex<2)timer.phaseIndex++;updateTimerUI();if(timer.remaining<=0)finishSession()}function startTimer(){if(!timer.interval)timer.interval=setInterval(tick,1000);timer.running=true;toast("Session started.")}function pauseTimer(){timer.running=!timer.running;toast(timer.running?"Session resumed.":"Session paused.")}function nextPhase(){if(timer.phaseIndex<2){timer.phaseIndex++;timer.remaining=phasePlan().slice(timer.phaseIndex).reduce((a,b)=>a+b,0);updateTimerUI()}}
+function finishSession(){timer.running=false;const s=load(STORE.sessions,[]),d=new Date(),r=current.row;s.unshift({date:todayKey(d),time:d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}),solarPhase:r.phase,frequency:r.hz,frequencyName:r.name,derivedFrom:r.derived,layer:r.layer,bodyFocus:current.region.title,codexEntry:current.region.entry,practiceType:r.practice,duration:selectedDuration,note:$("journalNote").value.trim(),completed:true});save(STORE.sessions,s);$("journalNote").value="";setDuration(selectedDuration);renderJournal();toast("Session logged.")}
+function streak(s){const days=[...new Set(s.map(x=>x.date))].sort();let st=0,c=new Date(todayKey()+"T00:00:00");for(;;){if(days.includes(todayKey(c))){st++;c.setDate(c.getDate()-1)}else break}return st}function renderJournal(){const s=load(STORE.sessions,[]);$("streakValue").textContent=`${streak(s)} days`;$("sessionCount").textContent=s.length;$("sessionList").innerHTML=s.length?s.map(x=>`<div class="item"><h3>${x.date} · ${x.time}</h3><p>${x.duration} min · ${x.frequency} Hz ${x.frequencyName} · ${x.bodyFocus}</p><p><span class="label">Layer</span>${x.layer||"—"}</p>${x.note?`<p><span class="label">Note</span>${x.note}</p>`:""}</div>`).join(""):"<p>No sessions yet.</p>"}
+function saveExperiment(){const e=load(STORE.experiments,[]),d=new Date();e.unshift({date:todayKey(d),time:d.toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}),name:$("expName").value.trim()||"Untitled Aqua Lab experiment",hypothesis:$("expHypothesis").value.trim(),volumeMl:Number($("waterVolume").value),tempC:$("waterTemp").value,container:$("containerType").value,controlMode:$("controlMode").value,frequencyHz:Number($("expHz").value),durationMin:Number($("expDuration").value),vocalInput:$("vocalInput").value.trim(),measurements:$("measurements").value.trim(),evidenceStatus:"EXPERIMENTAL / PERSONAL LOG ONLY"});save(STORE.experiments,e);["expName","expHypothesis","vocalInput","measurements"].forEach(id=>$(id).value="");renderExperiments();toast("Experiment saved.")}function renderExperiments(){const e=load(STORE.experiments,[]);$("experimentList").innerHTML=e.length?e.map(x=>`<div class="item"><h3>${x.name}</h3><div class="row tight">${badge("EXPERIMENTAL")}${badge("PERSONAL LOG")}</div><p>${x.date} · ${x.time} · ${x.frequencyHz} Hz · ${x.durationMin} min</p><p>${x.controlMode}; ${x.volumeMl} ml; ${x.container}; ${x.tempC||"—"} °C</p>${x.hypothesis?`<p>${x.hypothesis}</p>`:""}${x.measurements?`<p>${x.measurements}</p>`:""}</div>`).join(""):"<p>No Aqua Lab experiments yet.</p>"}
+function downloadJson(name,data){const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;a.click();URL.revokeObjectURL(url)}function switchScreen(n){all(".screen").forEach(s=>s.classList.toggle("active",s.id===`screen-${n}`));all(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.screen===n));if(n==="journal")renderJournal();if(n==="aqua")renderExperiments();if(n==="codex")renderCodex();if(n==="planner"){renderPlanner();renderPlannerDetail()}}
+all(".nav button").forEach(b=>b.addEventListener("click",()=>switchScreen(b.dataset.screen)));all(".region").forEach(r=>r.addEventListener("click",()=>setBodyRegion(r.dataset.region)));$("todayPlay").addEventListener("click",()=>playTone(current.row.hz));$("customPlay").addEventListener("click",()=>playTone($("customHz").value));$("freqList").addEventListener("click",e=>{const b=e.target.closest("[data-playhz]");if(b)playTone(b.dataset.playhz)});$("plannerList").addEventListener("click",e=>{const b=e.target.closest("[data-plan]");if(b){const r=planner.find(x=>x.id===b.dataset.plan);renderPlannerDetail(r)}});$("plannerDetail").addEventListener("click",e=>{const b=e.target.closest("[data-playhz]");if(b)playTone(b.dataset.playhz)});$("codexSearch").addEventListener("input",renderCodex);$("codexJump").addEventListener("click",()=>{$("codexSearch").value=current.region.entry;renderCodex();switchScreen("codex")});all("[data-duration]").forEach(b=>b.addEventListener("click",()=>setDuration(Number(b.dataset.duration))));$("startSession").addEventListener("click",startTimer);$("pauseSession").addEventListener("click",pauseTimer);$("nextPhase").addEventListener("click",nextPhase);$("finishSession").addEventListener("click",finishSession);$("saveExperiment").addEventListener("click",saveExperiment);$("exportSessions").addEventListener("click",()=>downloadJson("resonance-codex-sessions.json",load(STORE.sessions,[])));$("exportExperiments").addEventListener("click",()=>downloadJson("resonance-codex-aqua-lab.json",load(STORE.experiments,[])));$("clearSessions").addEventListener("click",()=>{if(confirm("Clear all sessions?")){save(STORE.sessions,[]);renderJournal()}});$("clearExperiments").addEventListener("click",()=>{if(confirm("Clear all experiments?")){save(STORE.experiments,[]);renderExperiments()}});
+setContext();renderPlanner();renderCodex();renderFrequencies();renderJournal();renderExperiments();setDuration(25);setInterval(setContext,60000);
+</script>
 </body>
 </html>
